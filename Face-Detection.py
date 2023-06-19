@@ -192,6 +192,7 @@ gray_img = cv2.cvtColor(test1, cv2.COLOR_BGR2GRAY)
 
 # or if you have matplotlib installed then
 plt.imshow(gray_img, cmap='gray')
+plt.show()
 
 # Now we find the faces in the image with **`detectMultiScale`**. If faces are found, this function returns the
 # positions of detected faces as Rect(x,y,w,h).
@@ -220,6 +221,7 @@ for (x, y, w, h) in faces:
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(test1))
+plt.show()
 
 
 # ### Grouping Code into a Function
@@ -255,6 +257,7 @@ faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
+plt.show()
 
 # ### `detectMultiScale` Parameter Details
 
@@ -285,6 +288,7 @@ faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
+plt.show()
 
 # Well, we got two false positives. What went wrong there? Remember, some faces may be closer to the camera and they 
 # would appear bigger than those faces in the back. The scale factor compensates for this so can tweak that 
@@ -300,6 +304,18 @@ faces_detected_img = detect_faces(haar_face_cascade, test2, scaleFactor=1.2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
+plt.show()
+
+testx = cv2.imread('data/test7.jpg')
+faces_detected_img_x = detect_faces(haar_face_cascade, testx)
+plt.imshow(convertToRGB(faces_detected_img_x))
+plt.show()
+
+testx2 = cv2.imread('data/test8.jpg')
+faces_detected_img_x2 = detect_faces(haar_face_cascade, testx2)
+plt.imshow(convertToRGB(faces_detected_img_x2))
+plt.show()
+
 
 # So you have to tune these parameters according to information you have about your data.
 
@@ -314,6 +330,16 @@ plt.imshow(convertToRGB(faces_detected_img))
 
 # load cascade classifier training file for lbpcascade
 lbp_face_cascade = cv2.CascadeClassifier('data/lbpcascade_frontalface.xml')
+
+testx = cv2.imread('data/test7.jpg')
+faces_detected_img_x = detect_faces(lbp_face_cascade, testx)
+plt.imshow(convertToRGB(faces_detected_img_x))
+plt.show()
+
+testx2 = cv2.imread('data/test8.jpg')
+faces_detected_img_x2 = detect_faces(lbp_face_cascade, testx2)
+plt.imshow(convertToRGB(faces_detected_img_x2))
+plt.show()
 
 # load test image
 test2 = cv2.imread('data/test2.jpg')
