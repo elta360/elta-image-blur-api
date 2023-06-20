@@ -154,8 +154,12 @@
 # import required libraries
 import numpy as np
 import cv2
+from os.path import exists
 import matplotlib.pyplot as plt
 import time
+from PIL import Image
+import py360convert
+Image.MAX_IMAGE_PIXELS = None
 
 
 # When you load an image using OpenCV it loads that image into BGR color space by default. To show the colored image
@@ -192,7 +196,6 @@ gray_img = cv2.cvtColor(test1, cv2.COLOR_BGR2GRAY)
 
 # or if you have matplotlib installed then
 plt.imshow(gray_img, cmap='gray')
-plt.show()
 
 # Now we find the faces in the image with **`detectMultiScale`**. If faces are found, this function returns the
 # positions of detected faces as Rect(x,y,w,h).
@@ -221,7 +224,6 @@ for (x, y, w, h) in faces:
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(test1))
-plt.show()
 
 
 # ### Grouping Code into a Function
@@ -240,7 +242,7 @@ def detect_faces(f_cascade, colored_img, scaleFactor=1.1):
 
     # go over list of faces and draw them as rectangles on original colored img
     for (x, y, w, h) in faces:
-        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 100)
 
     return img_copy
 
@@ -257,7 +259,6 @@ faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
-plt.show()
 
 # ### `detectMultiScale` Parameter Details
 
@@ -288,7 +289,6 @@ faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
-plt.show()
 
 # Well, we got two false positives. What went wrong there? Remember, some faces may be closer to the camera and they 
 # would appear bigger than those faces in the back. The scale factor compensates for this so can tweak that 
@@ -304,18 +304,23 @@ faces_detected_img = detect_faces(haar_face_cascade, test2, scaleFactor=1.2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
-plt.show()
 
-testx = cv2.imread('data/test7.jpg')
-faces_detected_img_x = detect_faces(haar_face_cascade, testx)
-plt.imshow(convertToRGB(faces_detected_img_x))
-plt.show()
+# testx3 = cv2.imread('data/test9.jpg')
+# faces_detected_img_x3 = detect_faces(haar_face_cascade, testx3, scaleFactor=1.17)
+# plt.imshow(convertToRGB(faces_detected_img_x3))
+# plt.show()
 
-testx2 = cv2.imread('data/test8.jpg')
-faces_detected_img_x2 = detect_faces(haar_face_cascade, testx2)
-plt.imshow(convertToRGB(faces_detected_img_x2))
-plt.show()
+def e2c(img_name):
+    image = np.array(Image.open(img_name))
+    e_img = py360convert.e2c(image, face_w=256, mode='bilinear', cube_format='dice')
+    Image.fromarray(e_img).save('data/test9_e2c.jpg')
 
+if not exists('data/test9_e2c.jpg'):
+    e2c('data/test9.jpg')
+testx4 = cv2.imread('data/test9_e2c.jpg')
+faces_detected_img_x4 = detect_faces(haar_face_cascade, testx4)
+plt.imshow(convertToRGB(faces_detected_img_x4))
+plt.show()
 
 # So you have to tune these parameters according to information you have about your data.
 
@@ -331,15 +336,11 @@ plt.show()
 # load cascade classifier training file for lbpcascade
 lbp_face_cascade = cv2.CascadeClassifier('data/lbpcascade_frontalface.xml')
 
-testx = cv2.imread('data/test7.jpg')
-faces_detected_img_x = detect_faces(lbp_face_cascade, testx)
-plt.imshow(convertToRGB(faces_detected_img_x))
-plt.show()
+# testx3 = cv2.imread('data/test9.jpg')
+# faces_detected_img_x3 = detect_faces(lbp_face_cascade, testx3)
+# plt.imshow(convertToRGB(faces_detected_img_x3))
+# plt.show()
 
-testx2 = cv2.imread('data/test8.jpg')
-faces_detected_img_x2 = detect_faces(lbp_face_cascade, testx2)
-plt.imshow(convertToRGB(faces_detected_img_x2))
-plt.show()
 
 # load test image
 test2 = cv2.imread('data/test2.jpg')
