@@ -252,7 +252,7 @@ def blur_faces(image, faces):
     for (x, y, w, h) in faces:
         roi = image[y:y+h, x:x+w]
         # applying a gaussian blur over this new rectangle area
-        roi = cv2.GaussianBlur(roi, (23, 23), 30)
+        roi = cv2.GaussianBlur(roi, (43, 43), 30)
         # impose this blurred image on original image to get final image
         image[y:y+roi.shape[0], x:x+roi.shape[1]] = roi
 
@@ -268,6 +268,7 @@ faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
+plt.show()
 
 # ### `detectMultiScale` Parameter Details
 
