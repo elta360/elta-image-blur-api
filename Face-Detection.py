@@ -242,10 +242,19 @@ def detect_faces(f_cascade, colored_img, scaleFactor=1.1):
 
     # go over list of faces and draw them as rectangles on original colored img
     for (x, y, w, h) in faces:
-        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 100)
+        cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    
+    blur_faces(img_copy, faces)
 
     return img_copy
 
+def blur_faces(image, faces):
+    for (x, y, w, h) in faces:
+        roi = image[y:y+h, x:x+w]
+        # applying a gaussian blur over this new rectangle area
+        roi = cv2.GaussianBlur(roi, (23, 23), 30)
+        # impose this blurred image on original image to get final image
+        image[y:y+roi.shape[0], x:x+roi.shape[1]] = roi
 
 # Now let's try this function on another test image. 
 
@@ -305,22 +314,10 @@ faces_detected_img = detect_faces(haar_face_cascade, test2, scaleFactor=1.2)
 # convert image to RGB and show image
 plt.imshow(convertToRGB(faces_detected_img))
 
-# testx3 = cv2.imread('data/test9.jpg')
-# faces_detected_img_x3 = detect_faces(haar_face_cascade, testx3, scaleFactor=1.17)
-# plt.imshow(convertToRGB(faces_detected_img_x3))
-# plt.show()
+testx = cv2.imread('data/test10.jpeg')
+faces_detected_img_x = detect_faces(haar_face_cascade, testx)
+plt.imshow(convertToRGB(faces_detected_img_x))
 
-def e2c(img_name):
-    image = np.array(Image.open(img_name))
-    e_img = py360convert.e2c(image, face_w=256, mode='bilinear', cube_format='dice')
-    Image.fromarray(e_img).save('data/test9_e2c.jpg')
-
-if not exists('data/test9_e2c.jpg'):
-    e2c('data/test9.jpg')
-testx4 = cv2.imread('data/test9_e2c.jpg')
-faces_detected_img_x4 = detect_faces(haar_face_cascade, testx4)
-plt.imshow(convertToRGB(faces_detected_img_x4))
-plt.show()
 
 # So you have to tune these parameters according to information you have about your data.
 
@@ -335,11 +332,6 @@ plt.show()
 
 # load cascade classifier training file for lbpcascade
 lbp_face_cascade = cv2.CascadeClassifier('data/lbpcascade_frontalface.xml')
-
-# testx3 = cv2.imread('data/test9.jpg')
-# faces_detected_img_x3 = detect_faces(lbp_face_cascade, testx3)
-# plt.imshow(convertToRGB(faces_detected_img_x3))
-# plt.show()
 
 
 # load test image
