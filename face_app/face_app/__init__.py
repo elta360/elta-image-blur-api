@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib as plt
+import matplotlib.pyplot
 
 
 def convertToRGB(img):
@@ -41,8 +42,8 @@ test2 = cv2.imread('data/test3.jpg')
 faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
-plt.imshow(convertToRGB(faces_detected_img))
-plt.show()
+plt.pyplot.imshow(convertToRGB(faces_detected_img))
+plt.pyplot.show()
 
 # load another image
 test2 = cv2.imread('data/test4.jpg')
@@ -51,7 +52,7 @@ test2 = cv2.imread('data/test4.jpg')
 faces_detected_img = detect_faces(haar_face_cascade, test2)
 
 # convert image to RGB and show image
-plt.imshow(convertToRGB(faces_detected_img))
+plt.pyplot.imshow(convertToRGB(faces_detected_img))
 
 test2 = cv2.imread('data/test4.jpg')
 
@@ -59,19 +60,19 @@ test2 = cv2.imread('data/test4.jpg')
 faces_detected_img = detect_faces(haar_face_cascade, test2, scaleFactor=1.2)
 
 # convert image to RGB and show image
-plt.imshow(convertToRGB(faces_detected_img))
+plt.pyplot.imshow(convertToRGB(faces_detected_img))
 
 testx = cv2.imread('data/test10.jpeg')
 faces_detected_img_x = detect_faces(haar_face_cascade, testx)
-plt.imshow(convertToRGB(faces_detected_img_x))
-plt.show()
+plt.pyplot.imshow(convertToRGB(faces_detected_img_x))
+plt.pyplot.show()
 
 testx2 = cv2.imread('data/test11.jpeg')
 faces_detected_img_x2 = detect_faces(haar_face_cascade, testx2)
-plt.imshow(convertToRGB(faces_detected_img_x2))
-plt.show()
+plt.pyplot.imshow(convertToRGB(faces_detected_img_x2))
+plt.pyplot.show()
 
 testx3 = cv2.imread('data/test12.jpg')
 faces_detected_img_x3 = detect_faces(haar_face_cascade, testx3)
-plt.imshow(convertToRGB(faces_detected_img_x3))
-plt.show()
+plt.pyplot.imshow(convertToRGB(faces_detected_img_x3))
+plt.pyplot.show()
