@@ -318,6 +318,17 @@ plt.imshow(convertToRGB(faces_detected_img))
 testx = cv2.imread('data/test10.jpeg')
 faces_detected_img_x = detect_faces(haar_face_cascade, testx)
 plt.imshow(convertToRGB(faces_detected_img_x))
+plt.show()
+
+testx2 = cv2.imread('data/test11.jpeg')
+faces_detected_img_x2 = detect_faces(haar_face_cascade, testx2)
+plt.imshow(convertToRGB(faces_detected_img_x2))
+plt.show()
+
+testx3 = cv2.imread('data/test12.jpg')
+faces_detected_img_x3 = detect_faces(haar_face_cascade, testx3)
+plt.imshow(convertToRGB(faces_detected_img_x3))
+plt.show()
 
 
 # So you have to tune these parameters according to information you have about your data.
