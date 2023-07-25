@@ -1,31 +1,22 @@
 import numpy as np
 import cv2
-import matplotlib as plt
-import matplotlib.pyplot
-from flask import Flask, request, Response
-import jsonpickle
+from flask import Flask, request, Response, jsonify
+import requests
 
 app = Flask(__name__)
 
 haar_face_cascade = cv2.CascadeClassifier('data/haarcascade_frontalface_alt.xml')
 
-@app.route('/api/test', methods=['POST'])
-def test():
-    r = request
-    
-    nparr = np.fromstring(r.data, np.uint8)
-  
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    img = detect_faces(haar_face_cascade, convertToRGB(img))
-
-    response = {'message': 'image received. size={}x{}'.format(img.shape[1], img.shape[0])
-                }
-    response_pickled = jsonpickle.encode(response)
-
-    return Response(response=response_pickled, status=200, mimetype="application/json")
-
-app.run(host="0.0.0.0", port=5000)
-
+def read_image_from_url(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for any HTTP error
+        nparr = np.fromstring(response.content, np.uint8)
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        return image
+    except requests.exceptions.RequestException as e:
+        print("Error fetching the image:", e)
+        return None
 
 def convertToRGB(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -54,44 +45,33 @@ def blur_faces(image, faces):
         # impose this blurred image on original image to get final image
         image[y:y+roi.shape[0], x:x+roi.shape[1]] = roi
 
+@app.route('/get_image', methods=['GET'])
+def get_image():
+    image_url = request.args.get('url')
 
-# test2 = cv2.imread('data/test3.jpg')
+    if image_url:
+        image = read_image_from_url(image_url)
+        if image is not None:
+            _, img_encoded = cv2.imencode('.jpg', image)
+            return Response(img_encoded.tobytes(), content_type='image/jpeg')
+        else:
+            return "Failed to read the image from the URL."
+    else:
+        return "Please provide the 'url' parameter with the image URL."
 
-# # call our function to detect faces
-# faces_detected_img = detect_faces(haar_face_cascade, test2)
+@app.route('/get_faces', methods=['GET'])
+def get_faces():
+    image_url = request.args.get('url')
+    if image_url:
+        image = read_image_from_url(image_url)
+        if image is not None:
+            faces_detected_img = detect_faces(haar_face_cascade, image)
+            _, img_encoded = cv2.imencode('.jpg', faces_detected_img)
+            return Response(img_encoded.tobytes(), content_type='image/jpeg')
+        else:
+            return "Failed to read the image from the URL."
+    else:
+        return "Please provide the 'url' parameter with the image URL."
 
-# # convert image to RGB and show image
-# plt.pyplot.imshow(convertToRGB(faces_detected_img))
-# plt.pyplot.show()
-
-# # load another image
-# test2 = cv2.imread('data/test4.jpg')
-
-# # call our function to detect faces
-# faces_detected_img = detect_faces(haar_face_cascade, test2)
-
-# # convert image to RGB and show image
-# plt.pyplot.imshow(convertToRGB(faces_detected_img))
-
-# test2 = cv2.imread('data/test4.jpg')
-
-# # call our function to detect faces
-# faces_detected_img = detect_faces(haar_face_cascade, test2, scaleFactor=1.2)
-
-# # convert image to RGB and show image
-# plt.pyplot.imshow(convertToRGB(faces_detected_img))
-
-# testx = cv2.imread('data/test10.jpeg')
-# faces_detected_img_x = detect_faces(haar_face_cascade, testx)
-# plt.pyplot.imshow(convertToRGB(faces_detected_img_x))
-# plt.pyplot.show()
-
-# testx2 = cv2.imread('data/test11.jpeg')
-# faces_detected_img_x2 = detect_faces(haar_face_cascade, testx2)
-# plt.pyplot.imshow(convertToRGB(faces_detected_img_x2))
-# plt.pyplot.show()
-
-# testx3 = cv2.imread('data/test12.jpg')
-# faces_detected_img_x3 = detect_faces(haar_face_cascade, testx3)
-# plt.pyplot.imshow(convertToRGB(faces_detected_img_x3))
-# plt.pyplot.show()
+if __name__ == '__main__':
+    app.run()
