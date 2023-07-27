@@ -15,6 +15,8 @@ matplotlib = "^3.7.1"
 flask = "^2.3.2"
 jsonpickle = "^3.0.1"
 requests = "^2.31.0"
+boto3 = "^1.28.12"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
