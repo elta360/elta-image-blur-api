@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath face_app.app:app
