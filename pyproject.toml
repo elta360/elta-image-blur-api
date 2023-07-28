@@ -2,7 +2,7 @@
 name = "face-app"
 version = "1.0.0"
 description = "Elta360 face blurring API"
-authors = ["KeremDilmen <krmdlmn03@gmail.com>", "Okan Aslan <okan@vrelta.com>"]
+authors = ["KeremDilmen <krmdlmn03@gmail.com>", "Okan Aslan <okan@vrelta.com>", "Emre Satilmis <emresatilmis42@gmail.com"]
 readme = "README.md"
 packages = []
 
