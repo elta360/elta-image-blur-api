@@ -1,1 +1,1 @@
-web: poetry run python app.py
+web: poetry install && poetry run python app.py
