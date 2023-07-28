@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "face-app"
-version = "0.1.0"
-description = ""
-authors = ["KeremDilmen <krmdlmn03@gmail.com>"]
+version = "1.0.0"
+description = "Elta360 face blurring API"
+authors = ["KeremDilmen <krmdlmn03@gmail.com>", "Okan Aslan <okan@vrelta.com>"]
 readme = "README.md"
-packages = [{include = "face_app"}]
+packages = []
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "3.11.4"
 pendulum = "^2.1.2"
 numpy = "^1.25.0"
 opencv-python = "^4.7.0.72"
