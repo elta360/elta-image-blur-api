@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath face_app.app:app
+web: gunicorn --pythonpath app face_app.app
