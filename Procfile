@@ -1,1 +1,1 @@
-web: uvicorn app:app --host=0.0.0.0 --port=5000
+web: uvicorn app:app --host=elta-face-bluring-api-e1c6259c0bd5.herokuapp --port=5000
