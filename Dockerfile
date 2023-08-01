@@ -6,5 +6,5 @@ WORKDIR /app
 ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
 RUN pip3 install poetry
 RUN poetry config virtualenvs.create false
-# RUN poetry install
+RUN poetry install
 CMD ["poetry", "run", "python", "app.py"]
