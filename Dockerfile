@@ -7,5 +7,4 @@ ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 RUN pip3 install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install
-RUN poetry add opencv-python
 CMD ["poetry", "run", "python", "app.py"]
