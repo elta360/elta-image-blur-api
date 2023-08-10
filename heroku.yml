@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: docker run -p $PORT:80 elta-face-bluring-api
+  web: docker run -p $PORT:80 elta-image-blur-api
