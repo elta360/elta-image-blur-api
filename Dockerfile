@@ -1,12 +1,12 @@
-FROM python:3.11.4
-RUN apt-get update && apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y libopencv-dev python3-opencv
-RUN mkdir /app
-COPY . /app
+FROM python:3.11.4 AS base
 WORKDIR /app
-ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
-RUN pip3 install poetry
-# RUN poetry config virtualenvs.create false
-RUN poetry install
-ENV PATH="/app/.venv/bin:$PATH"
+RUN pip install poetry
+COPY pyproject.toml poetry.lock /app/
+RUN poetry install --no-root
+COPY . /app
+FROM python:3.11.4-slim
+WORKDIR /app
+COPY --from=base /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=base /usr/local/bin /usr/local/bin
+COPY . /app
 CMD ["poetry", "run", "python", "app.py"]
