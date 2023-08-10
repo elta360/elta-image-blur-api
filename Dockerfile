@@ -1,6 +1,6 @@
 FROM python:3.11.4
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y libopencv-dev python3-opencv=4.7.0.72
+RUN apt-get install -y libopencv-dev opencv-python=4.7.0.72
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
