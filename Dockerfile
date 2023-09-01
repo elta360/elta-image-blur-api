@@ -32,7 +32,7 @@ COPY poetry.lock pyproject.toml /code/
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
-  && poetry install $(test "$YOUR_ENV" == "production" && echo "--no-dev") --no-interaction --no-ansi
+  && poetry install $([ "$YOUR_ENV" == "production" ] && echo "--no-dev") --no-interaction --no-ansi
 
 # Creating folders, and files for a project:
 COPY . /code
