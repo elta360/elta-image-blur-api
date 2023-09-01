@@ -1,34 +1,9 @@
-#FROM python:3.11.4
-#RUN apt-get update && apt-get install -y libgl1-mesa-glx
-#RUN apt-get install -y libopencv-dev python3-opencv
-#RUN mkdir /app
-#COPY . /app
-#WORKDIR /app
-#ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
-#RUN pip3 install poetry
-#RUN poetry install
-#CMD ["poetry", "run", "python", "app.py"]
+#Dockerfile for deployment to Heroku container with Poetry 1.5.1 and python 3.11.4
 
+FROM python:3.11.4-slim-buster
 
-FROM python:3.11.4
-
-ARG YOUR_ENV
-
-ENV YOUR_ENV=${YOUR_ENV} \
-  PYTHONFAULTHANDLER=1 \
-  PYTHONUNBUFFERED=1 \
-  PYTHONHASHSEED=random \
-  PIP_NO_CACHE_DIR=off \
-  PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.5.1
-
-# System deps:
-RUN pip install "poetry==$POETRY_VERSION"
-
-# Install system dependencies for OpenCV
-RUN apt-get update && apt-get install -y libgl1-mesa-glx
-RUN apt-get install -y libopencv-dev python3-opencv
+# Install Poetry
+RUN pip install poetry==1.5.1
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /code
@@ -36,9 +11,13 @@ COPY poetry.lock pyproject.toml /code/
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
-  && poetry install --no-dev --no-interaction --no-ansi
+    && poetry install --no-interaction --no-ansi
 
 # Creating folders, and files for a project:
-COPY . /code
+COPY . /code/
 
+# Expose port
+EXPOSE 8000
+
+# Run the application:
 CMD ["poetry", "run", "python", "app.py"]
