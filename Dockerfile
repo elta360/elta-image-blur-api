@@ -9,7 +9,6 @@
 #RUN poetry install
 #CMD ["poetry", "run", "python", "app.py"]
 
-
 FROM python:3.11.4
 
 ARG YOUR_ENV
@@ -32,7 +31,7 @@ COPY poetry.lock pyproject.toml /code/
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
-  && poetry install $([ "$YOUR_ENV" == "production" ] && echo "--no-dev") --no-interaction --no-ansi
+  && if [ "$YOUR_ENV" = "production" ]; then poetry install --no-interaction --no-ansi --no-dev; else poetry install --no-interaction --no-ansi; fi
 
 # Creating folders, and files for a project:
 COPY . /code
