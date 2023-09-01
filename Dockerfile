@@ -26,6 +26,10 @@ ENV YOUR_ENV=${YOUR_ENV} \
 # System deps:
 RUN pip install "poetry==$POETRY_VERSION"
 
+# Install system dependencies for OpenCV
+RUN apt-get update && apt-get install -y libgl1-mesa-glx
+RUN apt-get install -y libopencv-dev python3-opencv
+
 # Copy only requirements to cache them in docker layer
 WORKDIR /code
 COPY poetry.lock pyproject.toml /code/
