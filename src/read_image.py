@@ -5,6 +5,7 @@ import time
 
 from src.upload_image_to_s3 import upload_image_to_s3
 
+
 def read_image_from_url(url):
     try:
         response = requests.get(url)
@@ -13,7 +14,7 @@ def read_image_from_url(url):
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         current_time = int(time.time())
-        image_name = url.split('?')[0].split("/")[-1]
+        image_name = url.split("?")[0].split("/")[-1]
         image_name = f"{current_time}_{image_name}"
         upload_image_to_s3(image_name, image)
         return image

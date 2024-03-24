@@ -1,40 +1,28 @@
-#FROM python:3.11.4
-#RUN apt-get update && apt-get install -y libgl1-mesa-glx
-#RUN apt-get install -y libopencv-dev python3-opencv
-#RUN mkdir /app
-#COPY . /app
-#WORKDIR /app
-#ENV PYTHONPATH=${PYTHONPATH}:${PWD} 
-#RUN pip3 install poetry
-#RUN poetry install
-#CMD ["poetry", "run", "python", "app.py"]
+FROM python:3.11-buster
 
-FROM python:3.11.4
+# RUN pip install poetry
 
-ARG YOUR_ENV
+COPY . .
 
-ENV YOUR_ENV=${YOUR_ENV} \
-  PYTHONFAULTHANDLER=1 \
-  PYTHONUNBUFFERED=1 \
-  PYTHONHASHSEED=random \
-  PIP_NO_CACHE_DIR=off \
-  PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.5.1
+# RUN poetry install
 
-# System deps:
-RUN pip install "poetry==$POETRY_VERSION"
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy only requirements to cache them in docker layer
-WORKDIR /code
-COPY poetry.lock pyproject.toml /code/
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-# Project initialization:
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-dev --no-interaction --no-ansi
+RUN pip install gunicorn
 
-# Creating folders, and files for a project:
-COPY . /code
+EXPOSE 80
 
-# Start the Flask application
-CMD ["poetry", "run", "python", "app.py"]
+ENV PORT 8080
+
+# CMD ["bash", "-c", "gunicorn --bind 0.0.0.0:${PORT//\\/} app:app"]
+
+# Copy the start script into the container
+COPY start.sh /usr/src/app/start.sh
+
+# Make the start script executable
+RUN chmod +x /usr/src/app/start.sh
+
+# Run the start script with bash when the container launches
+CMD ["bash", "/usr/src/app/start.sh"]
