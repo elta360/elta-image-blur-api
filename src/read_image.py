@@ -10,7 +10,7 @@ def read_image_from_url(url):
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for any HTTP error)
-        nparr = np.fromstring(response.content, np.uint8)
+        nparr = np.frombuffer(response.content, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         current_time = int(time.time())
