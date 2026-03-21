@@ -16,9 +16,9 @@ def get_faces():
             _, img_encoded = cv2.imencode(".jpg", faces_detected_img)
             return Response(img_encoded.tobytes(), content_type="image/jpeg")
         else:
-            return "Failed to read the image from the URL."
+            return "Failed to read the image from the URL.", 422
     else:
-        return "Please provide the 'url' parameter with the image URL."
+        return "Please provide the 'url' parameter with the image URL.", 400
 
 
 if __name__ == "__main__":
